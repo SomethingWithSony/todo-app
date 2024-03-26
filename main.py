@@ -5,48 +5,69 @@ while True:
   user_action = user_action.strip()
   user_action = user_action.lower()
 
-  match user_action:
-    case "add":
+  
+  if "add" in user_action:
+    todo = user_action[4:]
+    todo = todo.strip(" ")
+    if len(todo) == 0:
       todo = input("Enter a todo: ") + "\n"
-
-      with open("data.txt", "r") as file:
-        todos = file.readlines()
+    
+    todo += "\n"
+    with open("data.txt", "r") as file:
+      todos = file.readlines()
+    
+    todos.append(todo)
+    with open("data.txt", "w") as file:
+      file.writelines(todos)
+    
+  elif "show" in user_action:
+    with open("data.txt", "r") as file:
+      todos = file.readlines()
+    new_todos = [item.strip("\n") for item in todos]
+    for index, item in enumerate(new_todos):
+      print(f"{index + 1}: {item}")
       
-      todos.append(todo)
-
-      with open("data.txt", "w") as file:
-        file.writelines(todos)
-      
-
-    case "show":
-      with open("data.txt", "r") as file:
-        todos = file.readlines()
-
-      new_todos = [item.strip("\n") for item in todos]
-      for index, item in enumerate(new_todos):
-        print(f"{index + 1}: {item}")
-
-
-    case "edit":
+  elif "edit" in user_action:
+    todo_index = user_action[5:]
+    todo_index = todo_index.strip(" ")
+    todo_index = int(todo_index)
+    
+    if len(todo_index) == 0:
       todo_index = int(input("Number of the todo to edit: "))
-      index = todo_index -1
-      todo = input("Enter a todo: ")
-      todos[index] = todo
+    
 
-      with open("data.txt", "w") as file:
-        file.writelines(todos)
-
-    case "complete":
+    index = todo_index -1
+    todo = input("Enter a todo: ")
+    
+    with open("data.txt", "r") as file:
+      todos = file.readlines()
+  
+    todos[index] = todo + "\n"
+    with open("data.txt", "w") as file:
+      file.writelines(todos)
+      
+  elif "complete" in user_action:
+    todo_index = user_action[9:]
+    todo_index = todo_index.strip(" ")
+    todo_index = int(todo_index)
+    
+    if len(todo_index) == 0:
       todo_index = int(input("Number of the todo to complete: "))
-      index = todo_index -1
-      todo = todos[index]
-      todos.pop(index)
+    
+    index = todo_index -1
+    
+    with open("data.txt", "r") as file:
+      todos = file.readlines()
+      
+    todo = todos[index]
+    todos.pop(index)
+    with open("data.txt", "w") as file:
+      file.writelines(todos)
+    print(f"To-do : {todo} completed!")
+  
+  elif "exit" in user_action:
+    break
+  else:
+    print("Unkown command ")
 
-      with open("data.txt", "w") as file:
-        file.writelines(todos)
-
-      print(f"To-do : {todo} completed!")
-    case "exit":
-      break
-    case _:
-      print("An unknown command was entered!")
+print("Bye bye!")
