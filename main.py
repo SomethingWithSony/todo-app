@@ -1,6 +1,6 @@
-todos = []
-
 while True:
+
+  # Get user input, lowercase  and removes space characters 
   user_action = input("Type add, show, edit, complete or exit: ")
   user_action = user_action.strip()
   user_action = user_action.lower()
@@ -8,41 +8,43 @@ while True:
   match user_action:
     case "add":
       todo = input("Enter a todo: ") + "\n"
-      file = open("data.txt", "r")
-      todos = file.readlines()
-      file.close()
 
+      with open("data.txt", "r") as file:
+        todos = file.readlines()
+      
       todos.append(todo)
 
-      file = open("data.txt", "w")
-      file.writelines(todos)
-      file.close()
+      with open("data.txt", "w") as file:
+        file.writelines(todos)
+      
 
     case "show":
-      file = open("data.txt", "r")
-      todos = file.readlines()
-      file.close()
+      with open("data.txt", "r") as file:
+        todos = file.readlines()
 
-      for index, item in enumerate(todos):
+      new_todos = [item.strip("\n") for item in todos]
+      for index, item in enumerate(new_todos):
         print(f"{index + 1}: {item}")
+
+
     case "edit":
       todo_index = int(input("Number of the todo to edit: "))
+      index = todo_index -1
       todo = input("Enter a todo: ")
-      todos[todo_index - 1] = todo
+      todos[index] = todo
 
-      file = open("data.txt", "w")
-      file.writelines(todos)
-      file.close()
+      with open("data.txt", "w") as file:
+        file.writelines(todos)
 
     case "complete":
       todo_index = int(input("Number of the todo to complete: "))
-      todo = todos[todo_index -1]
-      todos.pop(todo_index -1)
+      index = todo_index -1
+      todo = todos[index]
+      todos.pop(index)
 
-      file = open("data.txt", "w")
-      file.writelines(todos)
-      file.close()
-      
+      with open("data.txt", "w") as file:
+        file.writelines(todos)
+
       print(f"To-do : {todo} completed!")
     case "exit":
       break
