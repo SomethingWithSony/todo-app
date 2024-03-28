@@ -1,3 +1,14 @@
+def get_todos():
+  with open("data.txt", "r") as file:
+    todos = file.readlines()
+  return todos 
+
+
+def write_todos():
+  with open("data.txt", "w") as file:
+      file.writelines(todos)
+
+
 while True:
 
   # Get user input, lowercase  and removes space characters 
@@ -14,16 +25,13 @@ while True:
       todo = input("Enter a todo: ") + "\n"
     
     todo += "\n"
-    with open("data.txt", "r") as file:
-      todos = file.readlines()
+    todos = get_todos()
     
     todos.append(todo)
-    with open("data.txt", "w") as file:
-      file.writelines(todos)
+    write_todos()
     
   elif "show" in user_action:
-    with open("data.txt", "r") as file:
-      todos = file.readlines()
+    todos = get_todos()
     new_todos = [item.strip("\n") for item in todos]
     for index, item in enumerate(new_todos):
       print(f"{index + 1}: {item}")
@@ -41,12 +49,10 @@ while True:
       index = todo_index -1
       todo = input("Enter a todo: ")
       
-      with open("data.txt", "r") as file:
-        todos = file.readlines()
+      todos = get_todos()
     
       todos[index] = todo + "\n"
-      with open("data.txt", "w") as file:
-        file.writelines(todos)
+      write_todos()
     except ValueError:
       print("Invalid command!")
       continue
@@ -63,13 +69,11 @@ while True:
       todo_index = int(todo_index)
       index = todo_index -1
       
-      with open("data.txt", "r") as file:
-        todos = file.readlines()
+      todos = get_todos()
         
       todo = todos[index]
       todos.pop(index)
-      with open("data.txt", "w") as file:
-        file.writelines(todos)
+      write_todos()
       print(f"To-do : {todo} completed!")
     except ValueError:
       print("Invalid command!")
